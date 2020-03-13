@@ -1,0 +1,256 @@
+
+
+//going to act like tables in DB
+//trying to reflect scale of data by using numbers in 10,000+
+
+$scope.insurance_policy = [
+{
+  policy_id: 1,
+  company_id: 1,
+  policyholder_name: "Mr Simon Browne",
+  policyholder_dob: new Date(1989, 04, 16),
+  date_started: new Date(2019, 01, 01),
+  date_end: new Date(2021, 01, 01),
+  policy_type: "Third Party Fire & Theft"
+},
+{
+  policy_id: 2,
+  company_id: 2,
+  policyholder_name: "Mr Fred Flintstone",
+  policyholder_dob: new Date(1991, 06, 21),
+  date_started: new Date(1991, 06, 21),
+  date_end: new Date(1991, 06, 21),
+  policy_type: "Fully Comprehensive"
+}
+];
+
+$scope.car_insurance_company = [
+{	
+	company_id: 1,
+	company_name: "Aviva UK",
+	address: "3rd Floor, 6 Apple Street Pomona Business Centre, Nottingham",
+	postcode: "N11 8JJ",
+	tel: 08435040320
+},
+{	
+	company_id: 2,
+	company_name: "Churchill Insurance",
+	address: "27 Manchester Walk Way, Liverpool",
+	postcode: "L13 7TY",
+	tel: 08007776542
+}
+];
+
+$scope.car_insurance_claim = [
+{
+  claim_id: 1,
+  policy_id: 1,
+  company_id: 1,
+  claim_title: "Side Smash",
+  datetimeofaccident: new Date(2019, 09, 21),
+  car_reg: "ND13 TTY",
+  car_make: "Ford Focus",
+  car_model: "Titanium",
+  car_colour: "Blue",
+  parked_unparked: true,
+  weather: "Sunny",
+  light_level: "Bright",
+  road_quality: "Good",
+  damage_description: "Right side of car is totally smashed, seems quite severe. Hit by a white van.",
+  injury_description: "None",
+  geolocation: "53.396920, -2.169654",
+  manual_location: "",
+  to_blame: false
+},
+{
+  claim_id: 2,
+  policy_id: 2,
+  company_id: 2,
+  claim_title: "St Johns Road Incident",
+  datetimeofaccident: new Date(2018, 07, 13),
+  car_reg: "DR19 OER",
+  car_make: "Volkswagen",
+  car_model: "Polo",
+  car_colour: "Red",
+  parked_unparked: false,
+  weather: "Raining",
+  light_level: "Dim",
+  road_quality: "Terrible",
+  damage_description: "Front bonnet is crumpled pretty badly.",
+  injury_description: "Yes, my right leg is badly hurt, maybe fractured.",
+  geolocation: "",
+  manual_location: "St Johns Road, Sheffield",
+  to_blame: true
+},
+{
+  claim_id: 3,
+  policy_id: 1,
+  company_id: 1,
+  claim_title: "Garden Incident, Hole House Lane",
+  datetimeofaccident: new Date(2017, 07, 13),
+  car_reg: "ND13 TTY",
+  car_make: "Ford Focus",
+  car_model: "Titanium",
+  car_colour: "Blue",
+  parked_unparked: true,
+  weather: "Dull but Dry",
+  light_level: "Dusk",
+  road_quality: "Normal",
+  damage_description: "Rear of car has a dent. I ran over a few garden gnomes",
+  injury_description: "Nobody injured, just a few garden gnomes.",
+  geolocation: "53.483140, -1.596854",
+  manual_location: "",
+  to_blame: true
+},
+{
+  claim_id: 4,
+  policy_id: 2,
+  company_id: 2,
+  claim_title: "M1 Ferrari Crash",
+  datetimeofaccident: new Date(2020, 02, 13),
+  car_reg: "MU19 ITR",
+  car_make: "Ferrari",
+  car_model: "F40",
+  car_colour: "Red",
+  parked_unparked: true,
+  weather: "Sunny",
+  light_level: "Bright",
+  road_quality: "Good",
+  damage_description: "Right wingmirror is gone.",
+  injury_description: "Nobody injured, near miss.",
+  geolocation: "53.465562, -1.451345",
+  manual_location: "M1 Near Chapeltown",
+  to_blame: true
+}
+];
+
+$scope.claim_person = [
+{
+  person_id: 1,
+  claim_id: 1,
+  is_driver: true,
+  is_witness: false,
+  is_owner: true,
+  person_name: "Jill Peterson",
+  address: "26 Windamere lane, Stockport",
+  postcode: "SK7 8TY",
+  car_reg: "HR13 NUY",
+  has_insurance: true,
+  insurance_comp: "Axa Insurance",
+  insurance_addr: "N/A",
+  insurance_postcode: "N/A",
+  wit_statement: "None"
+},
+{
+  person_id: 2,
+  claim_id: 1,
+  is_driver: false,
+  is_witness: true,
+  is_owner: false,
+  person_name: "Mr Craig McGavigan",
+  address: "8 Vienna Road, Stockport",
+  postcode: "SK8 TY",
+  car_reg: "NULL",
+  has_insurance: false,
+  insurance_comp: "NULL",
+  insurance_addr: "NULL",
+  insurance_postcode: "NULL",
+  wit_statement: "I witnessed a white van careering into a blue Ford Focus on 21/09/19."
+},
+{
+  person_id: 3,
+  claim_id: 2,
+  is_driver: true,
+  is_witness: false,
+  is_owner: true,
+  person_name: "Mr James Woods",
+  address: "28 Free Lane, London",
+  postcode: "L13 7TY",
+  car_reg: "NI11 PBT",
+  has_insurance: true,
+  insurance_comp: "Churchill",
+  insurance_addr: "27 Manchester Walk Way, Liverpool",
+  insurance_postcode: "L13 7TY",
+  wit_statement: "N/A"
+},
+{
+  person_id: 4,
+  claim_id: 2,
+  is_driver: false,
+  is_witness: true,
+  is_owner: false,
+  person_name: "Miss Penny Washington",
+  address: "6 Whites Lane, Liverpool",
+  postcode: "LI98 9GH",
+  car_reg: "",
+  has_insurance: "",
+  insurance_comp: "",
+  insurance_addr: "",
+  insurance_postcode: "",
+  wit_statement: "Terrible crash on St Johns Road, hard to tell who was at fault, it seems that the Volkswagen was hit by the other vehicle."
+},
+{
+  person_id: 5,
+  claim_id: 3,
+  is_driver: true,
+  is_witness: true,
+  is_owner: false,
+  person_name: "Mrs Shirley Valentine",
+  address: "9 Lightway Avenue, Bristol",
+  postcode: "BR89 0NU",
+  car_reg: "BP19 BNS",
+  has_insurance: false,
+  insurance_comp: "",
+  insurance_addr: "",
+  insurance_postcode: "",
+  wit_statement: "My husband owns the house, a small mishap my Gnomes were destroyed."
+},
+{
+  person_id: 6,
+  claim_id: 3,
+  is_driver: false,
+  is_witness: false,
+  is_owner: true,
+  person_name: "Mr David Valentine",
+  address: "9 Lightway Avenue, Bristol",
+  postcode: "BR89 0NU",
+  car_reg: "BP19 BNS",
+  has_insurance: true,
+  insurance_comp: "M&S Buildings insurance",
+  insurance_addr: "",
+  insurance_postcode: "",
+  wit_statement: "N/A"
+},
+{
+  person_id: 7,
+  claim_id: 4,
+  is_driver: true,
+  is_witness: false,
+  is_owner: true,
+  person_name: "Mr Barry White",
+  address: "10 Leaping Lane, Southampton",
+  postcode: "SO9 7TY",
+  car_reg: "TA11 FGY",
+  has_insurance: true,
+  insurance_comp: "Marks & Spencer",
+  insurance_addr: "",
+  insurance_postcode: "",
+  wit_statement: ""
+},
+{
+  person_id: 8,
+  claim_id: 4,
+  is_driver: false,
+  is_witness: true,
+  is_owner: false,
+  person_name: "Mr Ben Stokes",
+  address: "11 Whitechapel Road, Surrey",
+  postcode: "SR7 8GH",
+  car_reg: "",
+  has_insurance: "",
+  insurance_comp: "",
+  insurance_addr: "",
+  insurance_postcode: "",
+  wit_statement: "I saw Mr Whites vehicle try to switch lanes and take the wing mirror off that beautiful Ferrai."
+}
+];

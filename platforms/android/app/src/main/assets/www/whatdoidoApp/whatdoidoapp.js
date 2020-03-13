@@ -1,0 +1,1 @@
+﻿angular.module("whatdoidoapp", ["ClaimModule", "AuthentModule", "ClaimAdminModule", "PersonAdminModule", "ProfileModule"])
