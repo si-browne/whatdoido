@@ -1,0 +1,18 @@
+{
+    "android": {
+        "debug": {
+            "keystore": "../android.keystore",
+            "storePassword": "icecream89",
+            "alias": "alias_name",
+            "password" : "icecream89",
+            "keystoreType": ""
+        },
+        "release": {
+            "keystore": "../android.keystore",
+            "storePassword": "icecream89",
+            "alias": "alias_name",
+            "password" : "icecream89",
+            "keystoreType": ""
+        }
+    }
+}

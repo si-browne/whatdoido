@@ -149,8 +149,6 @@
         <h3 style="font-size: 100%;" class="text-center">Your Claim: {{singleClaim.claim_title}}</h3>
       <hr>
         <div Style="color:white; font-size: 100%;" class="col-lg-12 lead">
-          <strong>Claim ID: </strong>{{singleClaim.claim_id}}
-          <br/>
           <br/>
           <strong>Date/Time of Accident: </strong>{{singleClaim.datetimeofaccident}}
           <br/>
@@ -274,17 +272,17 @@
         <table class="table table-striped table-light table-hover">
           <thead class="thead-dark">
             <tr>
-                <th>Claim Title</th>
-                <th>Date & Time</th>
-                <th>Action</th>
+              <th>Claim Title</th>
+              <th>View Associated People</th>
+              <th>Add New Person</th>
             </tr>
           </thead>
           <tbody>
-              <tr ng-repeat="claim in selectedCarInsClaims | filter: policynum">
-                  <td>{{claim.claim_title}}</td>
-                  <td>{{claim.datetimeofaccident | date:'dd/MM/yyyy hh:mm'}}</td>
-                  <td><button class="btn btn-dark" ng-click="showPeople(claim.claim_id)">View People</button></td>
-              </tr>
+            <tr ng-repeat="claim in selectedCarInsClaims | filter: policynum">
+                <td>{{claim.claim_title}}</td>
+                <td><button class="btn btn-dark" ng-click="showPeople(claim.claim_id)">View</button></td>
+                <td><button class="btn btn-dark" ng-click="showAddPerson(claim.claim_id)">Add</button></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -309,8 +307,54 @@
           </tbody>
         </table>
         <button class="btn btn-dark" ng-click="showClaimList()">< Back to List of Claims</button>
+
       </div>
     </div>
+
+    <div ng-show="addPerson">
+      <hr>
+      <h3 class="text-center">Add New Person</h3>
+      <hr>
+      <div style="font-weight: bold; color: white;">
+        <strong>Claim ID: </strong>{{newPersonClaim_ID}}
+        <br/>
+        <strong>Person ID: </strong>{{newPerson_ID}}
+        <br/>
+        <label>Name: <input type="text" ng-model="newPerson_name"></label>
+        <br/>
+        <label>Is this person a witness?: <input type="checkbox" ng-model="newPerson_is_witness"></label>
+        <br/>
+        <label>Is this person a driver?: <input type="checkbox" ng-model="newPerson_is_driver"></label>
+        <br/>
+        <label>Is this person a car owner?: <input type="checkbox" ng-model="newPerson_is_owner"></label>
+        <br/>
+        <label>Person's Address: <input type="text" ng-model="newPerson_address"></label>
+        <br/>
+        <label>Person's Postcode: <input type="text" ng-model="newPerson_postcode"></label>
+        <br/>
+        <label>Person's Car Reg: <input type="text" ng-model="newPerson_car_reg"></label>
+        <br/>
+        <label>Are they insured?: <input type="checkbox" ng-model="newPerson_has_insurance"></label>
+        <br/>
+        <label>Insurance Company: <input type="text" ng-model="newPerson_insurance_comp_name"></label>
+        <br/>
+        <label>Company Address: <input type="text" ng-model="newPerson_insurance_comp_addr"></label>
+        <br/>
+        <label>Company Postcode: <input type="text" ng-model="newPerson_insurance_postcode"></label>
+        <br/>
+        <label>Witness Statement: <input type="text" ng-model="newPerson_wit_statement"></label>
+        <br/>
+        <br/>
+      </div>
+      <span style="display: flex; justify-content: center; width:100%;" >
+        <button style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="addNewPerson()">Save</button>
+        <button class="btn btn-lg btn-danger" ng-click="cancelAddPerson()">Cancel</button>
+      </span>
+      <br/>
+      <br/>
+      <br/>
+    </div>
+
     <div ng-show="viewPerson">
       <hr>
       <h2 style="font-size: 100%; font-weight:bold;"class="text-center">Person Name: {{singlePerson.person_name}}</h2>
@@ -413,7 +457,7 @@
     <br/>
     <br/>
     <br/>
-      <strong>Please enter your unique insurance Policy number</strong>
+      <strong style="text-align: center;">Please enter your unique insurance Policy number</strong>
     <br/>
     <br/>
     <form name="authentform" required>
@@ -652,7 +696,7 @@
     <br/>
     <br/>
     <br/>
-    <h3>Your Policy information</h3>
+    <h4 style="text-align: center;">Your Policy information</h4>
     <br/>
     <div class="col-lg-12 table-responsive" >
       <table class="table table-striped table-light table-hover">
@@ -696,7 +740,7 @@
     </div>
     <div class="col-lg-12 table-responsive">
       <br/>
-        <h3>Your Insurance company information</h3>
+        <h4 style="text-align: center;">Your Insurance company information</h4>
       <br/>
       <table class="table table-striped table-light table-hover">
         <thead class="thead-dark">
@@ -746,8 +790,9 @@
       <br/>
       <br/>
         <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Other Driver Details</h3>
+        <p class="text-center" style="color:rgb(10, 0, 99);">(Optional)</p>
       <br/>
-      <br/>
+      <form name="claimFormOne">
       <div style="font-weight: bold; color: white;">
         <label>Driver Name: <input type="text" ng-model="driverName" /></label>
         <br/>
@@ -769,24 +814,29 @@
         <br/>
         <br/>
         <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Start Claim</h3>
+        <p style="font-weight:normal;" class="text-center">Required Field<em style="color:red;">*</em></p>
         <br/>
-        <br/>
-        <label>Enter your claim title: <input type="text" ng-model="claimTitleRecorded"></label>
+          <!-- Mandatory control -->
+          <span>
+            <label>Claim title<em style="color:red;">*</em>:  </label>
+            <input type="text" ng-model="claimTitleRecorded" required>
+          </span>
         <br/>
         <br/>
         <label>Are you to blame for the accident? <input type="checkbox" ng-model="areyouBlame"></label>
         <br/>
         <br/>
         <br/>
-        <strong><em style="color:rgb(10, 0, 99);">*WARNING:</em> Once you record a driver, a new claim will be created. It is not advisable to cancel or switch off your phone during the creation of a new claim.</strong>
+        <strong><em style="color:rgb(10, 0, 99);">*WARNING:</em> From this point onwards a new claim will be created. It is not advisable to cancel or switch off your phone during the creation of a new claim.</strong>
         <br/>
         <br/>
         <br/>
-      </div>
-      <span style="display: flex; justify-content: center; width:100%;" >
-        <button style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="startClaim()">Start Claim</button>
-        <button class="btn btn-lg btn-danger" ng-click="showHomefunc()">Cancel</button>
-      </span>
+        </div>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button ng-disabled="!claimFormOne.$valid" type="submit" style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="startClaim()">Start Claim</button>
+          <button class="btn btn-lg btn-danger" ng-click="exitClaim()">Cancel</button>
+        </span>
+      </form>
       <br/>
       <br/>
       <br/>
@@ -798,153 +848,327 @@
       <br/>
       <br/>
         <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Recording Evidence</h3>
+        <p style="font-weight:normal;" class="text-center">Required Field<em style="color:red;">*</em></p>
       <br/>
-      <div id="accordion" class="accordion-blocks">
+      <!-- wrapping second part of claim in form -->
+      <!-- matching mandatory inputs to model -->
+      <form name="claimFormTwo">
+        <div id="accordion" class="accordion-blocks">
 
-        <div Style="background-color: rgb(52, 58, 64);" class="card">
-          <div class="card-header" id="headingOne">
-            <span style="display: flex; font-size: 165%;" >
-              <p style="color:rgb(255, 0, 0);">*</p>
-              <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                Your Vehicles Details:
-              </button>
-            </span>
-          </div>
-          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-            <div style="color:rgb(255, 255, 255);" class="card-body">
-              <br/>
-              <label>Vehicle Registration: <input type="text" ng-model="createVehicleReg" /></label>
-              <br/>
-              <label>Car Make: <input type="text" ng-model="createVehicleMake"></label>
-              <br/>
-              <label>Car Model: <input type="text" ng-model="createVehicleModel"></label>
-              <br/>
-              <label>Car Colour: <input type="text" ng-model="createVehicleColour"></label>
-              <br/>
-            </div>
-          </div>
-        </div>
-
-        <div Style="background-color: rgb(52, 58, 64);" class="card">
-          <div class="card-header" id="headingTwo">
-            <span style="display: flex; font-size: 165%;" >
-              <p style="color:rgb(255, 0, 0);">*</p>
-              <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                Driving Conditions:
-              </button>
-            </span>
-          </div>
-          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-            <div style="color:rgb(255, 255, 255);" class="card-body">
-              <br/>
-              <label>Is your vehicle parked? <input type="checkbox" ng-model="createParkedUnparked" /></label>
-              <br/>
-              <label>Weather Conditions: <input type="text" ng-model="createWeather"></label>
-              <br/>
-              <label>Light Level: <input type="text" ng-model="createLightLevel"></label>
-              <br/>
-              <label>Road Quality: <input type="text" ng-model="createRoadQuality"></label>
-              <br/>
-            </div>
-          </div>
-        </div>
-
-        <div Style="background-color: rgb(52, 58, 64);" class="card">
-          <div class="card-header" id="headingThree">
-            <span style="display: flex; font-size: 165%;" >
-              <p style="color:rgb(255, 0, 0);">*</p>
-              <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                Damage Report:
-              </button>
-            </span>
-          </div>
-          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-            <div style="color:rgb(255, 255, 255);" class="card-body">
-              <br/>
-              <label>Damage Description: <input type="text" ng-model="createDamageReport"></label>
-              <br/>
-            </div>
-          </div>
-        </div>
-
-        <div Style="background-color: rgb(52, 58, 64);" class="card">
-          <div class="card-header" id="headingFour">
-            <span style="display: flex; font-size: 165%;" >
-              <p style="color:rgb(255, 0, 0);">*</p>
-              <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                Injury Report:
-              </button>
-            </span>
-          </div>
-          <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
-            <div style="color:rgb(255, 255, 255);" class="card-body">
-              <br/>
-              <label>Injury Report: <input type="text" ng-model="createInjuryReport"></label>
-              <br/>
-            </div>
-          </div>
-        </div>
-
-        <div Style="background-color: rgb(52, 58, 64);" class="card">
-          <div class="card-header" id="headingFive">
-            <span style="display: flex; font-size: 165%;" >
-              <p style="color:rgb(255, 0, 0);">*</p>
-              <button  style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                Location Details:
-              </button>
-            </span>
-          </div>
-          <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
-            <div style="color:rgb(255, 255, 255);" class="card-body">
-              <br/>
-              <span style="display: flex; justify-content: center; width:100%;" >
-                <button class="btn btn-lg btn-warning" ng-click="geoLocation()">Geolocation</button>
+          <div Style="background-color: rgb(52, 58, 64);" class="card">
+            <div class="card-header" id="headingOne">
+              <span style="display: flex; font-size: 165%;" >
+                <p style="color:rgb(255, 0, 0);">*</p>
+                <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Your Vehicles Details:
+                </button>
               </span>
-              <br/>
-              <br/>
-              <label>Manual Location: <input type="text" ng-model="createManualLocation"></label>
-              <br/>
+            </div>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+              <div style="color:rgb(255, 255, 255);" class="card-body">
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Vehicle Registration<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createVehicleReg" required>
+                </span>
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Car Make<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createVehicleMake" required>
+                </span>
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Car Model<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createVehicleModel" required>
+                </span>
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Car Colour<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createVehicleColour" required>
+                </span>
+                <br/>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div Style="background-color: rgb(52, 58, 64);" class="card">
-          <div class="card-header" id="headingSix">
-            <span style="display: flex; font-size: 165%;" >
-              <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                Witness Statement(s):
-              </button>
-            </span>
-          </div>
-          <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
-            <div style="color:rgb(255, 255, 255);" class="card-body">
-              <br/>
-              <label>Witness Name: <input type="text" ng-model="witnessName" /></label>
-              <br/>
-              <label>Witness Address: <input type="text" ng-model="witnessAddress"></label>
-              <br/>
-              <label>Witness Postcode: <input type="text" ng-model="witnessPostcode"></label>
-              <br/>
-              <label>Witness Statement: <input type="text" ng-model="witnessStatement"></label>
-              <br/>
-              <p style="color:yellow;">If you wish to add additional witnesses, you can do so in the people section after finishing this claim.</p>
+          <div Style="background-color: rgb(52, 58, 64);" class="card">
+            <div class="card-header" id="headingTwo">
+              <span style="display: flex; font-size: 165%;" >
+                <p style="color:rgb(255, 0, 0);">*</p>
+                <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Driving Conditions:
+                </button>
+              </span>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+              <div style="color:rgb(255, 255, 255);" class="card-body">
+                <br/>
+                <span>
+                  <label>Is your vehicle parked?:  </label>
+                  <input type="checkbox" ng-model="createParkedUnparked">
+                </span>
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Weather Conditions<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createWeather" required>
+                </span>
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Light Level<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createLightLevel" required>
+                </span>
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Road Quality<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createRoadQuality" required>
+                </span>
+                <br/>
+              </div>
             </div>
           </div>
-        </div> <!--end of last card-->
-      </div><!--end of accordion-->
+
+          <div Style="background-color: rgb(52, 58, 64);" class="card">
+            <div class="card-header" id="headingThree">
+              <span style="display: flex; font-size: 165%;" >
+                <p style="color:rgb(255, 0, 0);">*</p>
+                <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Damage Report:
+                </button>
+              </span>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+              <div style="color:rgb(255, 255, 255);" class="card-body">
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Damage Description<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createDamageReport" required>
+                </span>
+                <br/>
+              </div>
+            </div>
+          </div>
+
+          <div Style="background-color: rgb(52, 58, 64);" class="card">
+            <div class="card-header" id="headingFour">
+              <span style="display: flex; font-size: 165%;" >
+                <p style="color:rgb(255, 0, 0);">*</p>
+                <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                  Injury Report:
+                </button>
+              </span>
+            </div>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+              <div style="color:rgb(255, 255, 255);" class="card-body">
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Injury Report<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createInjuryReport" required>
+                </span>
+                <br/>
+              </div>
+            </div>
+          </div>
+
+          <div Style="background-color: rgb(52, 58, 64);" class="card">
+            <div class="card-header" id="headingFive">
+              <span style="display: flex; font-size: 165%;" >
+                <p style="color:rgb(255, 0, 0);">*</p>
+                <button  style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                  Location Details:
+                </button>
+              </span>
+            </div>
+            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+              <div style="color:rgb(255, 255, 255);" class="card-body">
+                <br/>
+                <span style="display: flex; justify-content: center; width:100%;" >
+                  <button class="btn btn-lg btn-warning" ng-click="geoLocation()">Geolocation</button>
+                </span>
+                <br/>
+                <br/>
+                <!-- Mandatory control -->
+                <span>
+                  <label>Manual Location<em style="color:red;">*</em>:  </label>
+                  <input type="text" ng-model="createManualLocation" required>
+                </span>
+                <br/>
+              </div>
+            </div>
+          </div>
+
+          <div Style="background-color: rgb(52, 58, 64);" class="card">
+            <div class="card-header" id="headingSix">
+              <span style="display: flex; font-size: 165%;" >
+                <button style="color:rgb(255, 255, 255); font-size: 100%;" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                  Witness Statement(s):
+                </button>
+              </span>
+            </div>
+            <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
+              <div style="color:rgb(255, 255, 255);" class="card-body">
+                <p style="color:yellow;">If you wish to add additional witnesses, you can do so in the people section after finishing this claim.</p>
+              </div>
+            </div>
+          </div> <!--end of last card-->
+
+        </div><!--end of accordion-->
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button ng-disabled="!claimFormTwo.$valid" style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="createClaim()">Continue</button>
+          <button style="margin-right: 40px;" class="btn btn-lg btn-warning" ng-click="takePicture()">Take A Picture</button>
+          <button class="btn btn-lg btn-danger" ng-click="cancelClaim()">Cancel</button>
+        </span>
+      </form>
       <br/>
-      <span style="display: flex; justify-content: center; width:100%;" >
-        <button style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="createClaim()">Continue</button>
-        <button style="margin-right: 40px;" class="btn btn-lg btn-warning" ng-click="takePicture()">Take A Picture</button>
-      </span>
-      <br/>
+      <p>Claim ID: {{newClaim_ID}}</p>
       <br/>
     </div>
+
     <div ng-show="showStg6">
-
+      <!--RECOMMENDATION SYSTEM CONDITION 1-->
+      <div ng-show="advise_transgressor">
+        <br/>
+        <img src="img/header.png" class="img-rounded" width="100%"  />
+        <br/>
+        <br/>
+          <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Recommendation</h3>
+        <br/>
+        <p>You have indicated that you have caused a road traffic accident. Do you wish to notify your insurer via Quickclaims?</p>
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="useQuickclaims()">Use Quickclaims</button>
+          <button class="btn btn-lg btn-danger" ng-click="saveClaim()">Save Claim</button>
+        </span>
+      </div>
+      <!--RECOMMENDATION SYSTEM CONDITION 2-->
+      <div ng-show="advise_victim_of_insured_and_third_party">
+        <br/>
+        <img src="img/header.png" class="img-rounded" width="100%"  />
+        <br/>
+        <br/>
+          <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Recommendation</h3>
+        <br/>
+        <p>You have indicated that you have been the victim of a road traffic accident that has been caused by an unsured driver and your insurance policy is third-party fire and theft. This means that you may need to contact the MIB for further assistance. Do you wish to notify your insurer via Quickclaims?</p>
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="useQuickclaims()">Use Quickclaims</button>
+          <button class="btn btn-lg btn-danger" ng-click="saveClaim()">Save Claim</button>
+        </span>
+      </div>
+      <!--RECOMMENDATION SYSTEM CONDITION 3-->
+      <div ng-show="advise_victim_of_uninsured_and_fully_comp">
+        <br/>
+        <img src="img/header.png" class="img-rounded" width="100%"  />
+        <br/>
+        <br/>
+          <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Recommendation</h3>
+        <br/>
+        <p>You have indicated that you have been the victim of a road traffic accident that has been caused by an unsured driver and your insurance policy is Fully Comprehensive. This means that you may be able to claim off your own insurance instead of contacting the MIB. Do you wish to notify your insurer via Quickclaims?</p>
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="useQuickclaims()">Use Quickclaims</button>
+          <button class="btn btn-lg btn-danger" ng-click="saveClaim()">Save Claim</button>
+        </span>
+      </div>
+      <!--RECOMMENDATION SYSTEM CONDITION 4-->
+      <div ng-show="advise_victim_of_insured">
+        <br/>
+        <img src="img/header.png" class="img-rounded" width="100%"  />
+        <br/>
+        <br/>
+          <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Recommendation</h3>
+        <br/>
+        <p>You have indicated that you have been the victim of a road traffic accident that has been caused by an insured driver. Do you wish to notify your insurer via Quickclaims?</p>
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="useQuickclaims()">Use Quickclaims</button>
+          <button class="btn btn-lg btn-danger" ng-click="saveClaim()">Save Claim</button>
+        </span>
+      </div>
+      <!--RECOMMENDATION SYSTEM CONDITION 5-->
+      <div ng-show="advise_victim">
+        <br/>
+        <img src="img/header.png" class="img-rounded" width="100%"  />
+        <br/>
+        <br/>
+          <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Recommendation</h3>
+        <br/>
+        <p>You have indicated that you have been the victim of a road traffic accident. Do you wish to notify your insurer via Quickclaims?</p>
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button style="margin-right: 40px;" class="btn btn-lg btn-success" ng-click="useQuickclaims()">Use Quickclaims</button>
+          <button class="btn btn-lg btn-danger" ng-click="saveClaim()">Save Claim</button>
+        </span>
+      </div>
     </div>
-    <div ng-show="showStg7">
 
+    <div ng-show="showStg7">
+      <div ng-show="quickclaims_success">
+        <br/>
+        <img src="img/header.png" class="img-rounded" width="100%"  />
+        <br/>
+        <br/>
+          <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Success</h3>
+        <br/>
+        <p>Your claim details have been successfully forwarded to your insurer using Quickclaims.</p>
+        <br/>
+        <p>Thank you for using Quickclaims</p>
+        <br/>
+        <br/>
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button class="btn btn-lg btn-success" ng-click="exitClaim()">Exit</button>
+        </span>
+      </div>
+      <div ng-show="save_success">
+        <br/>
+        <img src="img/header.png" class="img-rounded" width="100%"  />
+        <br/>
+        <br/>
+          <h3 class="text-center" style="color:lightgreen; text-decoration: underline;">Save Successful</h3>
+        <br/>
+        <p>You have chosen not to forward your claim details using Quickclaims. It is advisable to contact your insurer after an accident has occured. Your claim details have been saved on this application and you can access them under the claims section.</p>
+        <br/>
+        <p>Thank you for using Quickclaims</p>
+        <br/>
+        <br/>
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button class="btn btn-lg btn-success" ng-click="exitClaim()">Exit</button>
+        </span>
+      </div>
+      <div ng-show="view_503">
+        <br/>
+          <img src="img/header.png" class="img-rounded" width="100%" />
+        <br/>
+        <br/>
+          <h3 class="text-center" style="color:red; text-decoration: underline;">Error 503</h3>
+        <br/>
+        <p>There has been a technical error and your claim has not been forwarded to your insurer.  We are sorry for this convenience and advise you to stay calm and follow the correct guidelines if you have just been involved in an accident.</p>
+        <br/>
+        <p>-Call an ambulance if necessary</p>
+        <br/>
+        <p>If you suspect there has been a crime, contact the police for assistance:</p>
+        <br/>
+        <p>- 101 (non-emergency) - 999 (emergency)</p>
+        <br/>
+        <p>Thank you for using Quickclaims</p>
+        <br/>
+        <br/>
+        <span style="display: flex; justify-content: center; width:100%;" >
+          <button class="btn btn-lg btn-success" ng-click="exitClaim()">Exit</button>
+        </span>
+
+      </div>
     </div>
   </div>
   <!-------------------------------------------------------------------------------------------HELP SECTION-->
@@ -1005,7 +1229,7 @@
 <!--DECLARE MODULES BEFORE CONTROLLERS!.-->
 <!--Comment out js/cordova to browser test. (Ctrl + K + U)-->
 
-<!-- <script type="text/javascript" src="js/cordova.js"></script> -->
+<script type="text/javascript" src="js/cordova.js"></script>
 <script type="text/javascript" src="whatdoidoApp/whatdoidoapp.js"></script>
 
 <script type="text/javascript" src="whatdoidoApp/Quickclaims/QuickclaimsModule.js"></script>
